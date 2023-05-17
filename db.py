@@ -16,8 +16,10 @@ async def create_individual_table(chat_id, user_id):
     if not user:
         cur.execute("INSERT INTO wallet (tg_id) VALUES({key})".format(key=user_id))
         cur.execute(f"CREATE TABLE IF NOT EXISTS user_categories_{chat_id} ("
-                    "Їжа INT,"
-                    "Досуг INT,"
-                    "Авто INT,"
-                    "Комуналка INT)")
+                    "current_amount FLOAT,"
+                    "currency TEXT" 
+                    "Їжа FLOAT,"
+                    "Досуг FLOAT,"
+                    "Авто FLOAT,"
+                    "Комуналка FLOAT)")
         db.commit()
