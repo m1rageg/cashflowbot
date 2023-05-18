@@ -42,7 +42,7 @@ async def handle_amount_request(callback_query: types.CallbackQuery):
 
     await bot.send_message(
         chat_id=user_id,
-        text='Ви обрали UAH ₴ (Гривні). Підтвердіть Ваш вибір',
+        text='Ви обрали UAH ₴ (Гривні). Підтвердіть Ваш вибір.',
         reply_markup=kb.confirmuah
     )
 
@@ -53,8 +53,8 @@ async def handle_amount_request(callback_query: types.CallbackQuery):
 
     await bot.send_message(
         chat_id=user_id,
-        text='Ви обрали USD $ (Долар). Підтвердіть Ваш вибір',
-        reply_markup=kb.confirmuah
+        text='Ви обрали USD $ (Долар). Підтвердіть Ваш вибір.',
+        reply_markup=kb.confirmusd
     )
 
 
@@ -69,26 +69,26 @@ async def handle_amount_request(callback_query: types.CallbackQuery):
     )
 
 
-@dp.callback_query_handler(lambda callback_query: callback_query.data == 'yes usd')
+@dp.callback_query_handler(lambda callback_query: callback_query.data == 'yes uah')
 async def handle_amount_request(callback_query: types.CallbackQuery, state: FSMContext):
-    user_id = callback_query.from_user.id
 
+    user_id = callback_query.from_user.id
+    await db.inserting_currency(user_id, currency='UAH')
     await bot.send_message(
         chat_id=user_id,
-        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****, **'
+        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****, **. Суму буде збережено як поточні кошти користувача.'
     )
-
     await UserState.awaiting_amount.set()
     await state.update_data(user_id=user_id)
 
 
-@dp.callback_query_handler(lambda callback_query: callback_query.data == 'yes uah')
+@dp.callback_query_handler(lambda callback_query: callback_query.data == 'yes usd')
 async def handle_amount_request(callback_query: types.CallbackQuery, state: FSMContext):
     user_id = callback_query.from_user.id
-
+    await db.inserting_currency(user_id, currency='USD')
     await bot.send_message(
         chat_id=user_id,
-        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****, **'
+        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****, **. Суму буде збережено як поточні кошти користувача.'
     )
 
     await UserState.awaiting_amount.set()
@@ -103,7 +103,7 @@ async def handle_amount(message: types.Message, state: FSMContext):
     amount = message.text
 
     if validate_amount_format(amount):
-        # Здесь выполните соответствующие действия для сохранения суммы в базе данных
+        await db.inserting_sum_first_time(user_id, amount)
 
         await message.reply(f"Ви ввели суму: {amount}. Суму збережено.")
         await state.finish()
