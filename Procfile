@@ -1,2 +1,2 @@
+worker: python main.py
 release: python main.py
-worker: python bot.py
