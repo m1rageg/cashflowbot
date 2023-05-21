@@ -10,7 +10,7 @@ import os
 
 storage = MemoryStorage()
 load_dotenv()
-bot = Bot(os.getenv('TOKEN'))
+bot = Bot('5913263396:AAFHnpwo1yD-gwvRdCWPDPGRdEh0xwXDuUc')
 dp = Dispatcher(bot=bot,  storage=storage)
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
