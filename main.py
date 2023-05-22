@@ -10,7 +10,7 @@ import os
 
 storage = MemoryStorage()
 load_dotenv()
-bot = Bot('5913263396:AAFHnpwo1yD-gwvRdCWPDPGRdEh0xwXDuUc')
+bot = Bot(os.getenv('TOKEN'))
 dp = Dispatcher(bot=bot,  storage=storage)
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -78,7 +78,7 @@ async def handle_amount_request(callback_query: types.CallbackQuery, state: FSMC
     await db.inserting_currency(user_id, currency='UAH')
     await bot.send_message(
         chat_id=user_id,
-        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****, **. Суму буде збережено як поточні кошти користувача.'
+        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****. **. Суму буде збережено як поточні кошти користувача.'
     )
     await UserState.awaiting_amount.set()
     await state.update_data(user_id=user_id)
@@ -90,7 +90,7 @@ async def handle_amount_request(callback_query: types.CallbackQuery, state: FSMC
     await db.inserting_currency(user_id, currency='USD')
     await bot.send_message(
         chat_id=user_id,
-        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****, **. Суму буде збережено як поточні кошти користувача. 😉'
+        text=f'Будь-ласка, напишіть Ваші кошти станом на {datetime.now().strftime("%d/%m/%Y %H:%M:%S")} у такому вигляді:  ****. **. Суму буде збережено як поточні кошти користувача. 😉'
     )
 
     await UserState.awaiting_amount.set()
