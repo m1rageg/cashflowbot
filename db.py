@@ -53,6 +53,9 @@ async def inserting_credit(user_id, value):
     cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'")
     existing_table = cur.fetchone()
     if existing_table:
+        if ',' in str(value):
+            value = str(value)
+            value = float(value.replace(',', '.'))
         column_name = "Кредит"  # Имя целевой колонки
         cur.execute(f"UPDATE {table_name} SET {column_name} = ? WHERE id = 1", (value,))
         db.commit()
@@ -107,6 +110,9 @@ async def inserting_sum_first_time(user_id, value):
     cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'")
     existing_table = cur.fetchone()
     if existing_table:
+        if ',' in str(value):
+            value = str(value)
+            value = float(value.replace(',', '.'))
         column_name = "current_amount"  # Имя целевой колонки
         cur.execute(f"UPDATE {table_name} SET {column_name} = ? WHERE id = 1", (value,))
         db.commit()
@@ -118,7 +124,7 @@ async def getting_money(user_id):
     result = cur.fetchone()
     if result is not None:
         value = result[0]
-        return value
+        return round(value, 2)
 
 
 async def stat_expense(user_id):
